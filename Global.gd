@@ -18,6 +18,10 @@ const PLAYER_NAME = "Player"
 var hasUnlockedLevel00 : bool = false
 var block00_position = null
 
+var hasUnlockedSecret01 : bool = false #death on specific location
+var hasUnlockedSecret02 : bool = false #hit invisible box 7x
+
+
 func _ready():
 	var root = get_tree().get_root()
 	current_scene = root.get_child(root.get_child_count() - 1)

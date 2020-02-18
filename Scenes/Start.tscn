@@ -13,7 +13,7 @@ font_data = ExtResource( 4 )
 [node name="StartScreen" type="CanvasLayer"]
 pause_mode = 2
 script = ExtResource( 1 )
-next_scene = "res://Scenes/Levels/Platformer.tscn"
+next_scene = "res://Scenes/Levels/Level01.tscn"
 
 [node name="Label" type="Label" parent="."]
 margin_left = -1.0
@@ -22,10 +22,13 @@ margin_right = 251.0
 margin_bottom = 78.5242
 rect_scale = Vector2( 1.2698, 1.07866 )
 custom_fonts/font = ExtResource( 2 )
-text = "TITLE"
+text = "SHITLOOP"
 align = 1
 autowrap = true
 uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_left = 0.5
@@ -62,8 +65,11 @@ margin_top = -22.3806
 margin_right = 29.0
 margin_bottom = -12.3806
 custom_fonts/font = SubResource( 1 )
-text = "2019 @jickingx"
+text = "2020 @jickingx"
 underline = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="SoundStart" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 5 )
