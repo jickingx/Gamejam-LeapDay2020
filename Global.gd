@@ -31,6 +31,7 @@ func _ready():
 	setup_simple_dialogue()
 	setup_fade_transition()
 
+#CALL THIS WHEN SCENE SWITCHING
 func goto_scene(path):
 	#fade_out_transition()
 	# This function will usually be called from a signal callback,
@@ -127,3 +128,15 @@ func load_json_data():
 	data = data_parse.result
 	#print_debug(data["1"].name) #FOR JSON FORMAT WITH {"key":{"id":"value"}}
 	#print_debug(data["NpcNameHere"])
+
+#mutate player state
+func kill_player_then_restart_scene(killer_name: String):
+	print_debug('fuck')
+	
+	if killer_name == 'secret01':
+		hasUnlockedSecret01 = true
+	elif killer_name == 'secret02':
+		hasUnlockedSecret02 = true
+	var x = current_scene
+	
+	#goto_scene(current_scene)

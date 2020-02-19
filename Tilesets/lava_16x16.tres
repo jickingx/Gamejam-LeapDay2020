@@ -1,0 +1,5 @@
+[gd_resource type="StreamTexture" format=2]
+
+[resource]
+resource_local_to_scene = true
+load_path = "res://.import/lava_16x16.png-7ab08bde6b16274932bba933b13c5db9.stex"
