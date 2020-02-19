@@ -58,7 +58,7 @@ func _deferred_goto_scene(path):
 	get_tree().get_root().add_child(current_scene)
 	
 	# Optionally, to make it compatible with the SceneTree.change_scene() API.
-	get_tree().set_current_scene(current_scene)
+	#get_tree().set_current_scene(current_scene)
 	#add dialogue to scene
 	setup_simple_dialogue()
 	#add fade transition to scene
@@ -130,13 +130,12 @@ func load_json_data():
 	#print_debug(data["NpcNameHere"])
 
 #mutate player state
-func kill_player_then_restart_scene(killer_name: String):
+func kill_player_then_restart_scene(killer_name: String, path):
 	print_debug('fuck')
 	
 	if killer_name == 'secret01':
 		hasUnlockedSecret01 = true
 	elif killer_name == 'secret02':
 		hasUnlockedSecret02 = true
-	var x = current_scene
 	
-	#goto_scene(current_scene)
+	goto_scene(path)

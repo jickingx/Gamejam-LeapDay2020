@@ -1,21 +1,14 @@
 extends Area2D
 
+export(String, FILE) var next_scene_when_player_is_killed
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-func _on_KillerArea_body_entered(body):
+func _on_Area2D_body_entered(body):
+	print_debug("BODY hit")
 	if body.is_in_group("player"):
-		Global.kill_player_then_restart_scene('')
+		print_debug("player hit")
+		Global.kill_player_then_restart_scene('', next_scene_when_player_is_killed)
+		print_debug("player dead")
