@@ -15,11 +15,6 @@ var dialoguebox = null
 
 #player states
 const PLAYER_NAME = "Player"
-var hasUnlockedLevel00 : bool = false
-var block00_position = null
-
-var hasUnlockedSecret01 : bool = false #death on specific location
-var hasUnlockedSecret02 : bool = false #hit invisible box 7x
 
 
 func _ready():
@@ -88,7 +83,8 @@ func setup_simple_dialogue() -> void:
 	
 	print_debug("Has player")
 	player = current_scene.get_node(PLAYER_NAME)
-	player.connect("dead", self, "_on_Player_dead")
+	if not player.is_connected("dead", self, "_on_Player_dead") :
+		player.connect("dead", self, "_on_Player_dead")
 	
 	
 	#INTANTIATE DIALOGUEBOX
@@ -97,15 +93,16 @@ func setup_simple_dialogue() -> void:
 	dbox.hide()
 	dbox.set_name(DIALOGUEBOX_NAME)
 	current_scene.add_child(dbox)
-	
 	dialoguebox = current_scene.get_node(DIALOGUEBOX_NAME)
 
-	#ATTACH SIGNALS
-	dialoguebox.connect("closed", self, "_on_DialogueBox_closed")
+	#ATTACH dialoguebox SIGNALS
+	if not is_connected("closed", self, "_on_DialogueBox_closed") :
+		dialoguebox.connect("closed", self, "_on_DialogueBox_closed")
 
 func _on_Player_dead():
 	print_debug('killed player')
 	goto_scene("res://Scenes/Level00.tscn")
+	#goto_scene(get_tree().get_current_scene().filename)
 
 #CALLED BY NPCs
 func show_simple_dialogue(npc_name):
@@ -132,8 +129,6 @@ func load_json_data():
 	var data_parse = JSON.parse(data_text)
 	if data_parse.error != OK:
 		return
-	#print_debug(data["1"].name) #FOR JSON FORMAT WITH {"key":{"id":"value"}}
-	#print_debug(data["NpcNameHere"])
 	data = data_parse.result
 
 #mutate player state

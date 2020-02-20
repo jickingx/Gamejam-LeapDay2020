@@ -5,7 +5,7 @@
 [ext_resource path="res://Sounds/FX/jump.wav" type="AudioStream" id=3]
 [ext_resource path="res://Sounds/FX/hurt.wav" type="AudioStream" id=4]
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
 signal npc_collided
 signal dead
@@ -43,8 +43,6 @@ var is_dead_jumped = false
 
 
 func _physics_process(delta):
-	if is_disabled :
-		return
 	# Create forces
 	var force = Vector2(0, GRAVITY)
 
@@ -55,7 +53,7 @@ func _physics_process(delta):
 	var stop = true
 
 	#HELLO SPAGHETTI MY OLD FRIEND
-	if !is_dead :
+	if not is_dead and not is_disabled:
 		if walk_left:
 			if velocity.x <= WALK_MIN_SPEED and velocity.x > -WALK_MAX_SPEED:
 				force.x -= WALK_FORCE
@@ -78,10 +76,12 @@ func _physics_process(delta):
 		else:
 			sprite.play(\"walk\")
 	else:
-		if !is_dead_jumped :
+		if is_dead and not is_dead_jumped :
 			velocity.y = -JUMP_SPEED
 			jumping = true
 			is_dead_jumped = true
+		
+		velocity.x = 0
 
 	# Integrate forces to velocity
 	velocity += force * delta
@@ -107,9 +107,6 @@ func _physics_process(delta):
 	sync_with_camera()
 
 func _on_NpcSensorArea2D_body_entered(body):
-	#check if collides with killer object
-
-
 	#TODO: move trigger to show npc dialogue to NPC
 	if body.is_in_group(\"npc\"):
 		emit_signal(\"npc_collided\",body.name)
@@ -147,25 +144,26 @@ func _on_TimerDeath_timeout():
 	emit_signal(\"dead\")
 "
 
-[sub_resource type="CapsuleShape2D" id=4]
+[sub_resource type="CapsuleShape2D" id=2]
 radius = 5.33115
 height = 5.66335
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="CircleShape2D" id=3]
 radius = 8.54558
 
 [node name="Player" type="KinematicBody2D" groups=[
 "player",
 ]]
-script = SubResource( 3 )
+script = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 0.4 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -175,7 +173,7 @@ script = ExtResource( 2 )
 [node name="NpcSensorArea2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NpcSensorArea2D"]
-shape = SubResource( 2 )
+shape = SubResource( 3 )
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.2

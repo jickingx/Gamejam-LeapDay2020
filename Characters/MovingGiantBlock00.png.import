@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/door00_16x16.png-eeb8ad66672d082817fc2575db10fe38.stex"
+path="res://.import/MovingGiantBlock00.png-59b8e369ff5d315fabe7ec18fe404471.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Characters/Doors/door00_16x16.png"
-dest_files=[ "res://.import/door00_16x16.png-eeb8ad66672d082817fc2575db10fe38.stex" ]
+source_file="res://Characters/MovingGiantBlock00.png"
+dest_files=[ "res://.import/MovingGiantBlock00.png-59b8e369ff5d315fabe7ec18fe404471.stex" ]
 
 [params]
 
