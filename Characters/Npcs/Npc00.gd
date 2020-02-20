@@ -16,5 +16,8 @@ func _on_Npc00_body_entered(body):
 
 
 func _on_Timer_timeout():
-	is_disabled = false
+	#is_disabled = false
 	$Timer.stop()
+	$CollisionShape2D.disabled = true
+	monitorable = false
+	monitoring = false

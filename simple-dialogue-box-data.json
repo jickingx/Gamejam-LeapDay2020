@@ -1,4 +1,13 @@
 {
    "Npc00":"[center] Hello , I am a NPC[/center][center] Press Enter to continue..[/center];[center] This dialog box supports BB Code [/center];[center] Text data is set on //simple-dialogue-box-data.json [/center];[center] Go to door to exit level.[/center]",
-   "?":"[center]No idea?[/center]"
+   "?":"[center]No idea?[/center]",
+   "Npc01": "[center] Are you Serious? [/center]; [center] Just stay here with us, it's safe here.[/center]",
+   "Npc02": "[center] FUUUK? [/center]",
+   "Npc03": "[center] FUUUK? [/center]",
+   "Npc04": "[center] FUUUK? [/center]",
+   "Npc05": "[center] FUUUK? [/center]",
+   "Npc06": "[center] FUUUK? [/center]",
+   "Npc07": "[center] FUUUK? [/center]",
+   "Npc08": "[center] FUUUK? [/center]",
+   "Npc09": "[center] FUUUK? [/center]"
 }

@@ -79,6 +79,7 @@ func fade_out_transition() -> void:
 func setup_simple_dialogue() -> void:
 	#Check if player in scene then add dialogue manager
 	#todo: refactor to get player based on group
+	#todo: refactor move to player setup method
 	if current_scene.get_node(PLAYER_NAME) == null:
 		print_debug("No player")
 		player = null
@@ -86,6 +87,10 @@ func setup_simple_dialogue() -> void:
 		return
 	
 	print_debug("Has player")
+	player = current_scene.get_node(PLAYER_NAME)
+	player.connect("dead", self, "_on_Player_dead")
+	
+	
 	#INTANTIATE DIALOGUEBOX
 	var dbox_path = load("res://UI/DialogueBox/DialogueBox.tscn")
 	var dbox = dbox_path.instance()
@@ -93,12 +98,14 @@ func setup_simple_dialogue() -> void:
 	dbox.set_name(DIALOGUEBOX_NAME)
 	current_scene.add_child(dbox)
 	
-	player = current_scene.get_node(PLAYER_NAME)
 	dialoguebox = current_scene.get_node(DIALOGUEBOX_NAME)
 
 	#ATTACH SIGNALS
 	dialoguebox.connect("closed", self, "_on_DialogueBox_closed")
 
+func _on_Player_dead():
+	print_debug('killed player')
+	goto_scene("res://Scenes/Level00.tscn")
 
 #CALLED BY NPCs
 func show_simple_dialogue(npc_name):
@@ -125,19 +132,21 @@ func load_json_data():
 	var data_parse = JSON.parse(data_text)
 	if data_parse.error != OK:
 		return
-	data = data_parse.result
 	#print_debug(data["1"].name) #FOR JSON FORMAT WITH {"key":{"id":"value"}}
 	#print_debug(data["NpcNameHere"])
+	data = data_parse.result
 
 #mutate player state
 func kill_player_then_restart_scene(killer_name: String, path):
-	print_debug('fuck')
+	print_debug('kill player')
 	
-	if killer_name == 'secret01':
-		hasUnlockedSecret01 = true
-	elif killer_name == 'secret02':
-		hasUnlockedSecret02 = true
+	if player == null:
+		return
 	
+	if player.has_method("die") :
+		player.die()
+	
+	print_debug('killed player')
 	goto_scene(path)
 
 func shakeScreen():
