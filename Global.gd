@@ -139,3 +139,14 @@ func kill_player_then_restart_scene(killer_name: String, path):
 		hasUnlockedSecret02 = true
 	
 	goto_scene(path)
+
+func shakeScreen():
+	if player == null :
+		return
+	if !player.has_node("Camera2D") :
+		return
+	if !player.get_node("Camera2D").has_method("shake"):
+		return
+	player.get_node("Camera2D").shake()
+	print_debug("shake shake")
+
