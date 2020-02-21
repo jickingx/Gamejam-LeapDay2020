@@ -223,7 +223,7 @@ position = Vector2( 2720, 480 )
 position = Vector2( 3104, 800 )
 
 [node name="Player" parent="." instance=ExtResource( 9 )]
-position = Vector2( 1104, 424 )
+position = Vector2( 1944, 432 )
 
 [node name="Door01" type="Area2D" parent="."]
 position = Vector2( 3104, 264 )

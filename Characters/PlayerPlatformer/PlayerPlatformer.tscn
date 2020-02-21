@@ -1,41 +1,36 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Characters/PlayerPlatformer/PlayerPlatformerAnim.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://Characters/ShakeCamera.gd" type="Script" id=2]
 [ext_resource path="res://Sounds/FX/jump.wav" type="AudioStream" id=3]
 [ext_resource path="res://Sounds/FX/hurt.wav" type="AudioStream" id=4]
+[ext_resource path="res://Characters/PlayerPlatformer/MovementController.tscn" type="PackedScene" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
+
 signal npc_collided
 signal dead
 
-# This demo shows how to build a kinematic controller.
+# PHYSICS BASED ON 16
+const GRAVITY = Vector2(0, 384) #x24 #400
+const FLOOR_NORMAL = Vector2.UP
+const SLOPE_SLIDE_STOP = 32
+const MIN_ONAIR_TIME = 0.1
+const WALK_SPEED = 112 #120 # pixels/sec
+const JUMP_SPEED = 160 #x10 #170
+const SIDING_CHANGE_SPEED = 16
 
-# Member variables
-const GRAVITY = 400.0 # pixels/second/second
+var linear_vel = Vector2()
+var onair_time = 0 #
+var on_floor = false
+var anim=\"\"
 
-# Angle in degrees towards either side that the player can consider \"floor\"
-const FLOOR_ANGLE_TOLERANCE = 40
-const WALK_FORCE = 120
-const WALK_MIN_SPEED = 10
-const WALK_MAX_SPEED = 120
-const STOP_FORCE = 1300
-const JUMP_SPEED = 170
-const JUMP_MAX_AIRBORNE_TIME = 0.2
-
-const SLIDE_STOP_VELOCITY = 1.0 # one pixel/second
-const SLIDE_STOP_MIN_TRAVEL = 1.0 # one pixel
 
 #cache the sprite here for fast access (we will set scale to flip it often)
 onready var sprite = $AnimatedSprite
 onready var jump_sound = $JumpSound
 onready var hurt_sound = $HurtSound
-
-var velocity = Vector2()
-var on_air_time = 100
-var jumping = false
-var prev_jump_pressed = false
 
 var is_disabled = false
 var is_dead = false
@@ -43,67 +38,53 @@ var is_dead_jumped = false
 
 
 func _physics_process(delta):
-	# Create forces
-	var force = Vector2(0, GRAVITY)
-
-	var walk_left = Input.is_action_pressed(\"ui_left\")
-	var walk_right = Input.is_action_pressed(\"ui_right\")
-	var jump = Input.is_action_pressed(\"ui_up\")
-
-	var stop = true
-
-	#HELLO SPAGHETTI MY OLD FRIEND
-	if not is_dead and not is_disabled:
-		if walk_left:
-			if velocity.x <= WALK_MIN_SPEED and velocity.x > -WALK_MAX_SPEED:
-				force.x -= WALK_FORCE
-				stop = false
-		elif walk_right:
-			if velocity.x >= -WALK_MIN_SPEED and velocity.x < WALK_MAX_SPEED:
-				force.x += WALK_FORCE
-				stop = false
-
-		if stop:
-			var vsign = sign(velocity.x)
-			var vlen = abs(velocity.x)
-
-			vlen -= STOP_FORCE * delta
-			if vlen < 0:
-				vlen = 0
-
-			velocity.x = vlen * vsign
-			sprite.play(\"default\")
-		else:
-			sprite.play(\"walk\")
-	else:
-		if is_dead and not is_dead_jumped :
-			velocity.y = -JUMP_SPEED
-			jumping = true
-			is_dead_jumped = true
-		
-		velocity.x = 0
-
-	# Integrate forces to velocity
-	velocity += force * delta
-	# Integrate velocity into motion and move
-	velocity = move_and_slide(velocity, Vector2(0, -1))
-
+	#increment counters
+	onair_time += delta
+	
+	### MOVEMENT ###
+	# Apply Gravity
+	linear_vel += delta * GRAVITY
+	# Move and Slide
+	linear_vel = move_and_slide(linear_vel, FLOOR_NORMAL, SLOPE_SLIDE_STOP)
+	# Detect Floor
 	if is_on_floor():
-		on_air_time = 0
-
-	if jumping and velocity.y > 0:
-		# If falling, no longer jumping
-		jumping = false
-
-	if on_air_time < JUMP_MAX_AIRBORNE_TIME and jump and not prev_jump_pressed and not jumping:
-		# Jump must also be allowed to happen if the character left the floor a little bit ago.
-		# Makes controls more snappy.
-		velocity.y = -JUMP_SPEED
-		jumping = true
-		jump_sound.play()
-
-	on_air_time += delta
-	prev_jump_pressed = jump
+		onair_time = 0
+	on_floor = onair_time < MIN_ONAIR_TIME
+	
+	### CONTROL ###
+	# Horizontal Movement
+	var target_speed = 0
+	if Input.is_action_pressed(\"ui_left\") and not is_disabled and not is_dead:
+		target_speed += -1
+	if Input.is_action_pressed(\"ui_right\") and not is_disabled and not is_dead:
+		target_speed +=  1
+	target_speed *= WALK_SPEED
+	linear_vel.x = lerp(linear_vel.x, target_speed, 0.1)
+	# Jumping
+	if on_floor and Input.is_action_just_pressed(\"ui_up\") and not is_disabled and not is_dead:
+		linear_vel.y = -JUMP_SPEED
+		$JumpSound.play()
+	if is_dead and  not is_dead_jumped:
+		is_dead_jumped = true
+		linear_vel.y = -JUMP_SPEED
+		$JumpSound.play()
+	
+	### ANIMATION ###
+	var new_anim = \"default\"
+	if is_dead :
+		new_anim = \"dead\"
+	elif is_disabled :
+		new_anim = \"default\"
+	else:
+		if linear_vel.x < -SIDING_CHANGE_SPEED:
+			sprite.scale.x = -1
+			new_anim = \"walk\"
+		if linear_vel.x > SIDING_CHANGE_SPEED:
+			sprite.scale.x = 1
+			new_anim = \"walk\"
+	if new_anim != anim:
+		anim = new_anim
+		sprite.play(anim)
 	sync_with_camera()
 
 func _on_NpcSensorArea2D_body_entered(body):
@@ -131,7 +112,7 @@ func _ready():
 func _on_Timer_timeout():
 	enable()
 
-#TODO: make interface and applly to all killable objects
+#TODO: make interface and apply to all killable objects
 func die():
 	print_debug(\"die()\")
 	$TimerDeath.start()
@@ -158,6 +139,7 @@ script = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -189,6 +171,8 @@ stream = ExtResource( 3 )
 [node name="HurtSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 4 )
 pitch_scale = 4.61
+
+[node name="MovementController" parent="." instance=ExtResource( 5 )]
 [connection signal="body_entered" from="NpcSensorArea2D" to="." method="_on_NpcSensorArea2D_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="TimerDeath" to="." method="_on_TimerDeath_timeout"]
