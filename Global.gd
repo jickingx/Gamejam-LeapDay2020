@@ -154,3 +154,5 @@ func shakeScreen():
 	player.get_node("Camera2D").shake()
 	print_debug("shake shake")
 
+func activate_player_camera():
+	player.camera_on()

@@ -106,6 +106,12 @@ func sync_with_camera():
 	position.x = clamp(position.x, $Camera2D.limit_left, $Camera2D.limit_right)
 	position.y = clamp(position.y, $Camera2D.limit_top, $Camera2D.limit_bottom)
 
+func camera_on():
+	$Camera2D.current = true
+
+func camera_off():
+	$Camera2D.current = false
+
 func _ready():
 	disable()
 
@@ -139,7 +145,6 @@ script = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
-frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

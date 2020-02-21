@@ -24,6 +24,7 @@ func shake():
 
 func _on_Timer_timeout():
 	IS_ENABLED = true
+	Global.activate_player_camera()	
 	shake()
 
 

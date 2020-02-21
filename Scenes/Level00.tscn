@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Tilesets/TestTileset00.tres" type="TileSet" id=1]
 [ext_resource path="res://UI/buttonFont.tres" type="DynamicFont" id=2]
@@ -10,9 +10,13 @@
 [ext_resource path="res://Characters/MovingGiantBlock01.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Characters/PlayerPlatformer/PlayerPlatformer.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Characters/Door01.gd" type="Script" id=10]
+[ext_resource path="res://Scenes/Camera2DBossFight.gd" type="Script" id=11]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 1307, 10 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 64, 8 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 32, 10 )
@@ -124,40 +128,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ONE WAY PLATFORM" type="Node2D" parent="."]
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="ONE WAY PLATFORM" type="Node2D" parent="Platforms"]
 position = Vector2( 0, -16 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="SecretBlock01" parent="ONE WAY PLATFORM" instance=ExtResource( 3 )]
+[node name="SecretBlock01" parent="Platforms/ONE WAY PLATFORM" instance=ExtResource( 3 )]
 position = Vector2( 2168, 440 )
 
-[node name="SecretBlock02" parent="ONE WAY PLATFORM" instance=ExtResource( 3 )]
+[node name="SecretBlock02" parent="Platforms/ONE WAY PLATFORM" instance=ExtResource( 3 )]
 position = Vector2( 2184, 440 )
 
-[node name="ONE WAY PLATFORM2" type="Node2D" parent="."]
+[node name="ONE WAY PLATFORM2" type="Node2D" parent="Platforms"]
 position = Vector2( 0, -80 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="SecretBlock01" parent="ONE WAY PLATFORM2" instance=ExtResource( 3 )]
+[node name="SecretBlock01" parent="Platforms/ONE WAY PLATFORM2" instance=ExtResource( 3 )]
 position = Vector2( 2168, 440 )
 
-[node name="SecretBlock02" parent="ONE WAY PLATFORM2" instance=ExtResource( 3 )]
+[node name="SecretBlock02" parent="Platforms/ONE WAY PLATFORM2" instance=ExtResource( 3 )]
 position = Vector2( 2184, 440 )
 
-[node name="ONE WAY PLATFORM3" type="Node2D" parent="."]
+[node name="ONE WAY PLATFORM3" type="Node2D" parent="Platforms"]
 position = Vector2( 0, -144 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="SecretBlock01" parent="ONE WAY PLATFORM3" instance=ExtResource( 3 )]
+[node name="SecretBlock01" parent="Platforms/ONE WAY PLATFORM3" instance=ExtResource( 3 )]
 position = Vector2( 2168, 440 )
 
-[node name="SecretBlock02" parent="ONE WAY PLATFORM3" instance=ExtResource( 3 )]
+[node name="SecretBlock02" parent="Platforms/ONE WAY PLATFORM3" instance=ExtResource( 3 )]
 position = Vector2( 2184, 440 )
 
 [node name="KILLER AREA" type="Area2D" parent="."]
@@ -172,31 +178,33 @@ next_scene_when_player_is_killed = "res://Scenes/Level00.tscn"
 position = Vector2( 0, 8 )
 shape = SubResource( 1 )
 
-[node name="Npc01" parent="." instance=ExtResource( 5 )]
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="Npc01" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( 576, 440 )
 
-[node name="Npc06" parent="." instance=ExtResource( 5 )]
+[node name="Npc06" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( 952, 440 )
 
-[node name="Npc07" parent="." instance=ExtResource( 5 )]
+[node name="Npc07" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( 1736, 440 )
 
-[node name="Npc08" parent="." instance=ExtResource( 5 )]
+[node name="Npc08" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( 2552, 184 )
 
-[node name="Npc09" parent="." instance=ExtResource( 5 )]
+[node name="Npc09" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( 2856, 440 )
 
-[node name="Npc02" parent="." instance=ExtResource( 5 )]
+[node name="Npc02" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( -56, 472 )
 
-[node name="Npc03" parent="." instance=ExtResource( 5 )]
+[node name="Npc03" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( -120, 472 )
 
-[node name="Npc04" parent="." instance=ExtResource( 5 )]
+[node name="Npc04" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( -184, 472 )
 
-[node name="Npc05" parent="." instance=ExtResource( 5 )]
+[node name="Npc05" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( -312, 472 )
 
 [node name="Spawners" type="Node2D" parent="."]
@@ -216,6 +224,16 @@ position = Vector2( 2144, 96 )
 [node name="ProjectileSpawner5" parent="Spawners" instance=ExtResource( 6 )]
 position = Vector2( 2208, 96 )
 
+[node name="Camera2DBossFight" type="Camera2D" parent="."]
+position = Vector2( 2720, 408 )
+script = ExtResource( 11 )
+
+[node name="Area2D" type="Area2D" parent="Camera2DBossFight"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Camera2DBossFight/Area2D"]
+position = Vector2( 0, -32 )
+shape = SubResource( 3 )
+
 [node name="MovingGiantBlock00" parent="." instance=ExtResource( 7 )]
 position = Vector2( 2720, 480 )
 
@@ -223,7 +241,7 @@ position = Vector2( 2720, 480 )
 position = Vector2( 3104, 800 )
 
 [node name="Player" parent="." instance=ExtResource( 9 )]
-position = Vector2( 1944, 432 )
+position = Vector2( 2648, 168 )
 
 [node name="Door01" type="Area2D" parent="."]
 position = Vector2( 3104, 264 )
@@ -238,5 +256,6 @@ shape = SubResource( 2 )
 
 [node name="Timer" type="Timer" parent="Door01"]
 [connection signal="body_entered" from="KILLER AREA" to="KILLER AREA" method="_on_Area2D_body_entered"]
+[connection signal="body_entered" from="Camera2DBossFight/Area2D" to="Camera2DBossFight" method="_on_Area2D_body_entered"]
 [connection signal="body_entered" from="Door01" to="Door01" method="_on_Door01_body_entered"]
 [connection signal="timeout" from="Door01/Timer" to="Door01" method="_on_Timer_timeout"]
