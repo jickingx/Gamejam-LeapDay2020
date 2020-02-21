@@ -6,8 +6,8 @@ func spawn_Projectile():
 	print_debug("fire bullet SHOOOT")	
 	var s = ResourceLoader.load(projectilePath)
 	var newProjectile = s.instance()
-	newProjectile.position = position
-	get_tree().get_root().add_child(newProjectile)
+	newProjectile.position = global_position # USE THIS POSITION WHEN SPAWNING
+	get_tree().get_root().add_child(newProjectile) # ADD INSTANCE TO CURRENT SCENE
 
 
 func _on_Timer_timeout():

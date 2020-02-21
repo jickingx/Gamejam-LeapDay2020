@@ -199,19 +199,21 @@ position = Vector2( -184, 472 )
 [node name="Npc05" parent="." instance=ExtResource( 5 )]
 position = Vector2( -312, 472 )
 
-[node name="ProjectileSpawner" parent="." instance=ExtResource( 6 )]
-position = Vector2( 1184, 328 )
+[node name="Spawners" type="Node2D" parent="."]
 
-[node name="ProjectileSpawner2" parent="." instance=ExtResource( 6 )]
-position = Vector2( 1312, 328 )
+[node name="ProjectileSpawner" parent="Spawners" instance=ExtResource( 6 )]
+position = Vector2( 1184, 336 )
 
-[node name="ProjectileSpawner3" parent="." instance=ExtResource( 6 )]
-position = Vector2( 1440, 328 )
+[node name="ProjectileSpawner2" parent="Spawners" instance=ExtResource( 6 )]
+position = Vector2( 1312, 336 )
 
-[node name="ProjectileSpawner4" parent="." instance=ExtResource( 6 )]
+[node name="ProjectileSpawner3" parent="Spawners" instance=ExtResource( 6 )]
+position = Vector2( 1440, 336 )
+
+[node name="ProjectileSpawner4" parent="Spawners" instance=ExtResource( 6 )]
 position = Vector2( 2144, 96 )
 
-[node name="ProjectileSpawner5" parent="." instance=ExtResource( 6 )]
+[node name="ProjectileSpawner5" parent="Spawners" instance=ExtResource( 6 )]
 position = Vector2( 2208, 96 )
 
 [node name="MovingGiantBlock00" parent="." instance=ExtResource( 7 )]
@@ -221,7 +223,7 @@ position = Vector2( 2720, 480 )
 position = Vector2( 3104, 800 )
 
 [node name="Player" parent="." instance=ExtResource( 9 )]
-position = Vector2( 160, 264 )
+position = Vector2( 1104, 424 )
 
 [node name="Door01" type="Area2D" parent="."]
 position = Vector2( 3104, 264 )
