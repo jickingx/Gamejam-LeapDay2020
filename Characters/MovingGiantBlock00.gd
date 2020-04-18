@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 #THIS BLOCK MOVES DOWN
 
-export (int) var SPEED : int = 20
+export (int) var SPEED : int = 40
 export (bool) var IS_ENABLED : bool = false
 
 var velocity : Vector2 = Vector2()

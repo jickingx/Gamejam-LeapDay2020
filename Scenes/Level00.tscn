@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Tilesets/TestTileset00.tres" type="TileSet" id=1]
 [ext_resource path="res://UI/buttonFont.tres" type="DynamicFont" id=2]
@@ -11,15 +11,34 @@
 [ext_resource path="res://Characters/PlayerPlatformer/PlayerPlatformer.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Characters/Door01.gd" type="Script" id=10]
 [ext_resource path="res://Scenes/Camera2DBossFight.gd" type="Script" id=11]
+[ext_resource path="res://Characters/BOSS/BOSS_32x32.png" type="Texture" id=12]
+[ext_resource path="res://Characters/BOSS/BOSS_32x24.png" type="Texture" id=13]
+[ext_resource path="res://Characters/BOSS/BOSS_00.gd" type="Script" id=14]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 1307, 10 )
 
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 64, 8 )
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 95.9475, 2.2916 )
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 32, 10 )
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ ExtResource( 12 ) ],
+"loop": true,
+"name": "idle",
+"speed": 4.0
+}, {
+"frames": [ ExtResource( 13 ) ],
+"loop": true,
+"name": "attack",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 16, 13.757 )
 
 [node name="Node2D" type="Node2D"]
 
@@ -193,7 +212,7 @@ position = Vector2( 1736, 440 )
 position = Vector2( 2552, 184 )
 
 [node name="Npc09" parent="NPCs" instance=ExtResource( 5 )]
-position = Vector2( 2856, 440 )
+position = Vector2( 2752, 56 )
 
 [node name="Npc02" parent="NPCs" instance=ExtResource( 5 )]
 position = Vector2( -56, 472 )
@@ -231,17 +250,19 @@ script = ExtResource( 11 )
 [node name="Area2D" type="Area2D" parent="Camera2DBossFight"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Camera2DBossFight/Area2D"]
-position = Vector2( 0, -32 )
-shape = SubResource( 3 )
+position = Vector2( 0, 37.0905 )
+shape = SubResource( 6 )
 
-[node name="MovingGiantBlock00" parent="." instance=ExtResource( 7 )]
+[node name="Timer" type="Timer" parent="Camera2DBossFight"]
+
+[node name="MovingGiantBlockDown" parent="." instance=ExtResource( 7 )]
 position = Vector2( 2720, 480 )
 
-[node name="MovingGiantBlock01" parent="." instance=ExtResource( 8 )]
+[node name="MovingGiantBlockUp" parent="." instance=ExtResource( 8 )]
 position = Vector2( 3104, 800 )
 
 [node name="Player" parent="." instance=ExtResource( 9 )]
-position = Vector2( 2648, 168 )
+position = Vector2( 2640, 168 )
 
 [node name="Door01" type="Area2D" parent="."]
 position = Vector2( 3104, 264 )
@@ -252,10 +273,35 @@ __meta__ = {
 next_scene = "res://Scenes/Outro.tscn"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door01"]
-shape = SubResource( 2 )
+shape = SubResource( 3 )
 
 [node name="Timer" type="Timer" parent="Door01"]
+
+[node name="BOSS CONTAINER" type="Node2D" parent="."]
+position = Vector2( 2576, 432 )
+
+[node name="BOSS_00" type="Area2D" parent="BOSS CONTAINER" groups=[
+"boss",
+]]
+position = Vector2( 8, 0 )
+script = ExtResource( 14 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="BOSS CONTAINER/BOSS_00"]
+frames = SubResource( 4 )
+animation = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BOSS CONTAINER/BOSS_00"]
+position = Vector2( 0, 2.1976 )
+shape = SubResource( 5 )
+
+[node name="Timer" type="Timer" parent="BOSS CONTAINER/BOSS_00"]
+wait_time = 2.0
+one_shot = true
 [connection signal="body_entered" from="KILLER AREA" to="KILLER AREA" method="_on_Area2D_body_entered"]
 [connection signal="body_entered" from="Camera2DBossFight/Area2D" to="Camera2DBossFight" method="_on_Area2D_body_entered"]
+[connection signal="timeout" from="Camera2DBossFight/Timer" to="Camera2DBossFight" method="_on_Timer_timeout"]
 [connection signal="body_entered" from="Door01" to="Door01" method="_on_Door01_body_entered"]
 [connection signal="timeout" from="Door01/Timer" to="Door01" method="_on_Timer_timeout"]
